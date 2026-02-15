@@ -30,7 +30,7 @@ resource "aws_s3_bucket" "tf-blog-website-bucket" {
 }
 
 
-resource "aws_s3_bucket_configuration" "blog_config" {
+resource "aws_s3_bucket_website_configuration" "blog_config" {
   bucket = aws_s3_bucket.tf-blog-website-bucket.id
 
   index_document {
@@ -57,7 +57,7 @@ resource "aws_s3_bucket_policy" "public_read_policy" {
   depends_on = [aws_s3_bucket_public_access_block.blog_public_access]
   bucket     = aws_s3_bucket.tf-blog-website-bucket.id
 
-  policy = jsondecode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
