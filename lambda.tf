@@ -1,19 +1,31 @@
-resource "aws_iam_role" "lambda_exec" {
-  name = "${var.project_name}-lambda-exec-role"
-  assume_role_policy = jsonencode({
-    Version = "2017-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-    }]
-  })
+
+data "archive_file" "auth_placeholder" {
+  type        = "zip"
+  output_path = "${path.module}/dummy_auth.zip"
+
+  source {
+    content  = "exports.handler= async()=> {return  {statusCode:200, body:'Auth Placeholder'}};"
+    filename = "index.js"
+  }
 
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionrole"
+resource "aws_lambda_function" "auth_handler" {
+  function_name = "${var.project_name}-auth-handler"
+  role          = aws_iam_role.auth_lambda_role.arn
+  handler       = "index.handler"
+  runtime       = "nodejs20.x"
+  memory_size   = 512
+
+  filename         = data.archive_file.auth_placeholder.output_path
+  source_code_hash = data.archive_file.auth_placeholder.output_base64sha256
+
+  environment {
+    variables = {
+      DATABASE_URL         = var.database_url
+      BETTER_AUTH_SECRET   = var.better_auth_secret
+      COGNITO_USER_POOL_ID = aws_cognito_user_pool.pool.id
+      COGNITO_CLIENT_ID    = aws_cognito_user_pool_client.client.id
+    }
+  }
 }
