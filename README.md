@@ -86,11 +86,10 @@ graph TD
     B -- "✍️ Creates" --> E
     B -- "💾 Manages State in" --> S1
 
-    %% Estilos para resaltar lo nuevo
     classDef highlight fill:#ffebee,stroke:#f44336,stroke-width:2px;
     classDef highlightConnector stroke:#f44336,stroke-width:3px;
 
     class GW,ST,RT,Gateway_Layer highlight;
-    linkStyle 16 highlightConnector; %% Conexión RT --> G
-    linkStyle 18 highlightConnector; %% Conexión B --> GW
+    linkStyle 16 highlightConnector;
+    linkStyle 18 highlightConnector;
 ```
