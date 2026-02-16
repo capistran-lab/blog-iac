@@ -22,3 +22,18 @@ variable "environment" {
   type        = string
   default     = "dev" # dev,stage,prod
 }
+
+
+variable "database_url" {
+  description = "neon database url"
+  type        = string
+  sensitive   = true
+  default     = "change_this_db_url"
+}
+
+variable "better_auth_secret" {
+  description = "better auth secret"
+  type        = string
+  sensitive   = true
+  default     = "change_this_secret"
+}

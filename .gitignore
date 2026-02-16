@@ -3,6 +3,10 @@
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+*.tfvars
+.tfvars.json
+terraform.tfstate*
+ 
 
 # Next.js
 node_modules/
