@@ -33,11 +33,25 @@ terraform -install-autocomplete
 
 ```mermaid
 graph TD
+    subgraph External_User [🌐 Internet]
+        User["💻 User / Frontend"]
+    end
+
     subgraph GitHub_Actions [🚀 GitHub Actions Pipeline]
         A["🔐 Secrets: DB_URL, AUTH_SECRET"] --> B["⚙️ Terraform Plan/Apply"]
     end
 
     subgraph AWS_Cloud [☁️ AWS Cloud - us-east-1]
+
+        subgraph Gateway_Layer [⛩️ Entry Point]
+            GW["🌐 API Gateway: blog-api"]
+            ST["📝 Stage: $default"]
+            RT["🛣️ Route: /api/auth/*"]
+
+            GW --> ST
+            ST --> RT
+        end
+
         subgraph Storage_Layer [🪣 Storage & State]
             S1["📦 S3: Terraform State"] --- B
             S2["📦 S3: ucapistran-blog"]
@@ -57,12 +71,16 @@ graph TD
             I["👥 Cognito User Pool"] <--> J["🔑 User Pool Client"]
             G -- "🛠️ Admin Actions" --> I
         end
+
+        RT -- "🔗 Integration" --> G
     end
 
     subgraph External [🐘 Database]
         K["💎 Neon PostgreSQL"] <--> G
     end
 
+    User -- "HTTPS Request" --> GW
+    B -- "🏗️ Deploys/Configures" --> GW
     B -- "🏗️ Deploys" --> G
     B -- "🔧 Configures" --> I
     B -- "✍️ Creates" --> E
