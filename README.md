@@ -31,8 +31,12 @@ terraform -install-autocomplete
 
 # Architecture
 
+<<<<<<< Updated upstream
 ```mermaid
 graph TD
+=======
+```graph TD
+>>>>>>> Stashed changes
     subgraph External_User [🌐 Internet]
         User["💻 User / Frontend"]
     end
@@ -85,4 +89,12 @@ graph TD
     B -- "🔧 Configures" --> I
     B -- "✍️ Creates" --> E
     B -- "💾 Manages State in" --> S1
+
+    %% Estilos para resaltar lo nuevo
+    classDef highlight fill:#ffebee,stroke:#f44336,stroke-width:2px;
+    classDef highlightConnector stroke:#f44336,stroke-width:3px;
+
+    class GW,ST,RT,Gateway_Layer highlight;
+    linkStyle 16 highlightConnector; %% Conexión RT --> G
+    linkStyle 18 highlightConnector; %% Conexión B --> GW
 ```
