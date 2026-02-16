@@ -31,12 +31,8 @@ terraform -install-autocomplete
 
 # Architecture
 
-<<<<<<< Updated upstream
 ```mermaid
 graph TD
-=======
-```graph TD
->>>>>>> Stashed changes
     subgraph External_User [🌐 Internet]
         User["💻 User / Frontend"]
     end
