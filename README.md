@@ -85,4 +85,10 @@ graph TD
     B -- "🔧 Configures" --> I
     B -- "✍️ Creates" --> E
     B -- "💾 Manages State in" --> S1
+
+    %% Estilo DARK con bordes y letras rojas
+    style GW fill:#000,stroke:#ff0000,stroke-width:2px,color:#ff0000
+    style ST fill:#000,stroke:#ff0000,stroke-width:2px,color:#ff0000
+    style RT fill:#000,stroke:#ff0000,stroke-width:2px,color:#ff0000
+    style Gateway_Layer fill:#000,stroke:#ff0000,stroke-width:1px,stroke-dasharray: 5 5,color:#ff0000
 ```
