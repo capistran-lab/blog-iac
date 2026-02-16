@@ -86,9 +86,9 @@ graph TD
     B -- "✍️ Creates" --> E
     B -- "💾 Manages State in" --> S1
 
-    %% Aplicando estilos directamente para máxima compatibilidad en GitHub
-    style GW fill:#ffebee,stroke:#f44336,stroke-width:2px
-    style ST fill:#ffebee,stroke:#f44336,stroke-width:2px
-    style RT fill:#ffebee,stroke:#f44336,stroke-width:2px
-    style Gateway_Layer fill:#fff5f5,stroke:#f44336,stroke-dasharray: 5 5
+    %% Estilo DARK con bordes y letras rojas
+    style GW fill:#000,stroke:#ff0000,stroke-width:2px,color:#ff0000
+    style ST fill:#000,stroke:#ff0000,stroke-width:2px,color:#ff0000
+    style RT fill:#000,stroke:#ff0000,stroke-width:2px,color:#ff0000
+    style Gateway_Layer fill:#000,stroke:#ff0000,stroke-width:1px,stroke-dasharray: 5 5,color:#ff0000
 ```
