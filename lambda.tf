@@ -24,7 +24,6 @@ resource "aws_lambda_function" "auth_handler" {
     ignore_changes = [
       filename,
       source_code_hash,
-      last_modified,
     ]
   }
 
