@@ -1,13 +1,22 @@
-
+# Este es el bloque que te falta declarar
 data "archive_file" "auth_placeholder" {
   type        = "zip"
   output_path = "${path.module}/dummy_auth.zip"
 
   source {
-    content  = "exports.handler= async()=> {return  {statusCode:200, body:'Auth Placeholder'}};"
+    content  = "exports.handler= async()=> {return {statusCode:200, body:'Auth Placeholder'}};"
     filename = "index.js"
   }
+}
+resource "aws_s3_object" "auth_placeholder_upload" {
+  bucket = aws_s3_bucket.artifacts_storage.id
+  key    = "auth-handler.zip"
+  source = data.archive_file.auth_placeholder.output_path
 
+  # Solo lo sube si no existe; luego GitHub Actions se encarga
+  lifecycle {
+    ignore_changes = [source, etag]
+  }
 }
 
 resource "aws_lambda_function" "auth_handler" {
@@ -17,13 +26,14 @@ resource "aws_lambda_function" "auth_handler" {
   runtime       = "nodejs20.x"
   memory_size   = 512
 
-  filename         = data.archive_file.auth_placeholder.output_path
-  source_code_hash = data.archive_file.auth_placeholder.output_base64sha256
+  s3_bucket = aws_s3_bucket.artifacts_storage.id
+  s3_key    = aws_s3_object.auth_placeholder_upload.key
 
   lifecycle {
     ignore_changes = [
-      filename,
+      s3_key,
       source_code_hash,
+      last_modified,
     ]
   }
 
