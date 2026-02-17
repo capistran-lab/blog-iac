@@ -26,16 +26,19 @@ resource "aws_lambda_function" "auth_handler" {
   runtime       = "nodejs20.x"
   memory_size   = 512
 
-  s3_bucket  = "${var.project_name}-artifacts" # Nombre directo
-  s3_key     = "auth-handler.zip"
-  depends_on = [aws_s3_object.auth_placeholder_upload]
-  lifecycle {
-    ignore_changes = [
-      s3_key,
-      source_code_hash,
-      last_modified,
-    ]
-  }
+  s3_bucket = "blog-website-artifacts"
+  s3_key    = "auth-handler.zip"
+
+  # Añade esto temporalmente para forzar el envío de datos
+  source_code_hash = data.archive_file.auth_placeholder.output_base64sha256
+  depends_on       = [aws_s3_object.auth_placeholder_upload]
+  # lifecycle {
+  #   ignore_changes = [
+  #     s3_key,
+  #     source_code_hash,
+  #     last_modified,
+  #   ]
+  # }
 
   environment {
     variables = {
