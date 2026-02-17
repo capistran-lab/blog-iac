@@ -26,7 +26,7 @@ resource "aws_lambda_function" "auth_handler" {
   runtime       = "nodejs20.x"
   memory_size   = 512
 
-  s3_bucket  = aws_s3_bucket.artifacts_storage.id
+  s3_bucket  = "${var.project_name}-artifacts" # Nombre directo
   s3_key     = "auth-handler.zip"
   depends_on = [aws_s3_object.auth_placeholder_upload]
   lifecycle {
