@@ -47,6 +47,7 @@ resource "aws_lambda_function" "auth_handler" {
     variables = {
       DATABASE_URL         = var.database_url
       BETTER_AUTH_SECRET   = var.better_auth_secret
+      BETTER_AUTH_URL      = "${aws_apigatewayv2_api.blog_api.api_endpoint}/api/auth"
       COGNITO_USER_POOL_ID = aws_cognito_user_pool.pool.id
       COGNITO_CLIENT_ID    = aws_cognito_user_pool_client.client.id
     }
