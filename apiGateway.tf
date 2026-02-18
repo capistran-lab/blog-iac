@@ -30,8 +30,7 @@ resource "aws_apigatewayv2_integration" "lambda_blog_int" {
   integration_type = "AWS_PROXY"
 
   # CAMBIO AQUÍ: Usa .arn en lugar de .invoke_arn
-  integration_uri = "${aws_lambda_function.auth_handler.arn}:live"
-
+  integration_uri        = aws_lambda_function.auth_handler.invoke_arn
   payload_format_version = "2.0"
 }
 
