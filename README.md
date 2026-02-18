@@ -30,7 +30,8 @@ chmod +x bootstrap.sh
 
 In this version, we removed external dependencies (Neon DB) to favor a fully AWS-native ecosystem. Red nodes indicate the core of the new identity-to-data synchronization flow.
 
-```graph TD
+```mermaid
+   graph TD
     subgraph External_User [🌐 Internet]
         User["💻 User (Next.js on S3)"]
     end
