@@ -31,55 +31,68 @@ chmod +x bootstrap.sh
 In this version, we removed external dependencies (Neon DB) to favor a fully AWS-native ecosystem. Red nodes indicate the core of the new identity-to-data synchronization flow.
 
 ```mermaid
-   graph TD
+graph TD
     subgraph External_User [🌐 Internet]
-        User["💻 User (Next.js on S3)"]
+        User["💻 User (Next.js App)"]
     end
 
     subgraph GitHub_Actions [🚀 GitHub Actions Pipeline]
+        Runner["🍊 Orange Pi Runner (Node 23)"]
         B["⚙️ Terraform Plan/Apply"]
+        Runner --> B
         S1["📦 S3: Terraform State"] --- B
     end
 
     subgraph AWS_Cloud [☁️ AWS Cloud - us-east-1]
 
-        subgraph Auth_Identity [🆔 Identity & Trigger]
+        subgraph Entry_Point [🌐 API & Gateway]
+            AGW["🔗 API Gateway (HTTP API)"]
+        end
+
+        subgraph Auth_Identity [🆔 Identity]
             I["👥 Cognito User Pool"]
             J["🔑 User Pool Client"]
-
             I <--> J
         end
 
         subgraph Compute_Layer [🖥️ Compute]
-            L["⚡ Lambda: blog-auth-handler"]
-            L_ENV["🔑 Env Vars: TABLE_NAME"]
+            L_AUTH["⚡ Lambda (Node): blog-auth-handler"]
+            L_POSTS["🐍 Lambda (Python): blog-posts-handler"]
 
-            I -- "🔥 Trigger: Post-Confirmation" --> L
-            L --- L_ENV
+            I -- "Trigger: Post-Confirmation" --> L_AUTH
         end
 
         subgraph Storage_Layer [📦 Data Persistence]
             DB["💎 DynamoDB: blog-website-table"]
+            GSI["🔍 GSI: SlugIndex"]
+            DB --- GSI
         end
 
         subgraph IAM_Control [🛡️ IAM & Permissions]
-            Role["📜 Lambda IAM Role"]
-            Pol["✅ Policy: DynamoDB:PutItem"]
-            Role --- Pol
-            L --- Role
-        end
+            RoleA["📜 Auth IAM Role"]
+            RoleP["📜 Posts IAM Role"]
+            PolP["✅ Policy: DynamoDB Index Query"]
 
+            L_AUTH --- RoleA
+            L_POSTS --- RoleP
+            RoleP --- PolP
+        end
     end
 
     %% Flow Connections
-    User -- "1. SignUp / Confirm" --> J
-    L -- "2. Sync User Profile" --> DB
+    User -- "1. API Requests" --> AGW
+    AGW -- "/signup" --> L_AUTH
+    AGW -- "/posts" --> L_POSTS
+    L_AUTH -- "2. Sync Profile" --> DB
+    L_POSTS -- "3. CRUD & Slug Query" --> DB
 
-    %% Highlighted Changes (RED)
-    style I fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
-    style L fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
-    style DB fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
-    style Pol fill:#ffebee,stroke:#ff0000,stroke-width:1px,color:#b71c1c
+    %% Highlighted Changes (RED) for the new Post Infrastructure
+    style AGW fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
+    style L_POSTS fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
+    style RoleP fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
+    style PolP fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
+    style GSI fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
+    style Runner fill:#000,stroke:#ff0000,stroke-width:3px,color:#ff0000
 ```
 
 ### 📝 Key Infrastructure Notes
