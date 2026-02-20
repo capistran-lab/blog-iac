@@ -24,6 +24,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Debug Environment
+        run: |
+          echo "Current User: $(whoami)"
+          echo "Home Directory: $HOME"
+          if [ -d "$HOME/.nvm" ]; then echo "NVM folder exists"; else echo "NVM folder MISSING"; fi
+          if [ -f "$HOME/.bashrc" ]; then grep "NVM_DIR" "$HOME/.bashrc"; fi
 
       # Paso opcional para validar la versión de Node en el runner
       - name: Check Node Version from NVM
