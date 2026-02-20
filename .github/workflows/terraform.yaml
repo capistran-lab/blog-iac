@@ -12,8 +12,10 @@ permissions:
 jobs:
   terraform:
     name: "Terraform"
-    runs-on: ubuntu-latest
-
+    runs-on: [self-hosted, orangepi]
+    defaults:
+      run:
+        shell: bash -l {0}
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -22,11 +24,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+      - name: Setup Node from NVM
+        # Cargamos NVM y lo añadimos al PATH oficial de GitHub Actions
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          # Añade el binario de la versión default al PATH de los siguientes pasos
+          NODE_PATH=$(dirname $(which node))
+          echo "$NODE_PATH" >> $GITHUB_PATH
+          echo "Node version: $(node -v)"
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.7.0"
+          terraform_version: "1.14.5"
+          terraform_wrapper: false
 
       - name: Terraform Format
         id: fmt
