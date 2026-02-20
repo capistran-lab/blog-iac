@@ -32,7 +32,7 @@ resource "aws_lambda_function" "posts_handler" {
   depends_on = [
     aws_iam_role.posts_lambda_role,
     aws_iam_role_policy.posts_lambda_policy,
-    aws_s3_object.aws_s3_object.posts_place_holder_upload
+    aws_s3_object.posts_place_holder_upload
   ]
 
   environment {

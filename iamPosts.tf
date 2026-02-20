@@ -20,10 +20,11 @@ resource "aws_iam_role_policy" "posts_lambda_policy" {
     Statement = [
       {
         Effect = "Allow"
-        Action = ["dynamodb.PutItem", "dynamodb.GetItem", "dynamodb.UpdateItem", "dynamodb.Query", "dynamodb.Scan"]
+        Action = ["dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:UpdateItem", "dynamodb:Query", "dynamodb:Scan"]
         Resource = [
           aws_dynamodb_table.blog_table.arn,
-          "${aws.dynamodb_table.blog_table.arn}/index/*"
+          "${aws_dynamodb_table.blog_table.arn}/index/*"
+
         ]
       },
       {
