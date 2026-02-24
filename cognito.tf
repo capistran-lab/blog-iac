@@ -115,7 +115,7 @@ resource "aws_cognito_user" "admin_user" {
     email_verified = true
     name           = var.admin_name
   }
-  message_action = "RESEND"
+  message_action = "SUPPRESS"
 }
 
 
@@ -141,4 +141,30 @@ resource "aws_cognito_user_in_group" "admin_association" {
   group_name   = aws_cognito_user_group.admins.name
   username     = aws_cognito_user.admin_user.username
 
+}
+
+#----- Adding Admin user to Dynamo ----#
+
+resource "aws_dynamodb_table_item" "admin_profile" {
+  table_name = aws_dynamodb_table.blog_table.name # Ajusta al nombre de tu recurso de tabla
+  hash_key   = "PK"
+  range_key  = "SK"
+
+  item = <<ITEM
+{
+  "PK": {"S": "USER#${aws_cognito_user.admin_user.sub}"},
+  "SK": {"S": "PROFILE#${aws_cognito_user.admin_user.sub}"},
+  "type": {"S": "USER"},
+  "id": {"S": "${aws_cognito_user.admin_user.sub}"},
+  "email": {"S": "${var.admin_email}"},
+  "name": {"S": "${var.admin_name}"},
+  "role": {"S": "admin"},
+  "createdAt": {"S": "${timestamp()}"},
+  "updatedAt": {"S": "${timestamp()}"},
+  "emailVerified": {"BOOL": true}
+}
+ITEM
+  depends_on = [
+    aws_cognito_user.admin_user
+  ]
 }
