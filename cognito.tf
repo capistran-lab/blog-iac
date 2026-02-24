@@ -115,7 +115,7 @@ resource "aws_cognito_user" "admin_user" {
     email_verified = true
     name           = var.admin_name
   }
-  message_action = "SUPPRESS"
+  message_action = "RESEND"
 }
 
 
