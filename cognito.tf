@@ -108,7 +108,30 @@ resource "aws_cognito_user" "admin_user" {
     email_verified = true
     name           = var.admin_name
   }
+  message_action = "SUPPRESS"
+}
 
-  message_action = "SUPRESS"
+
+#--- Cognito groups----- #
+resource "aws_cognito_user_group" "admins" {
+  name         = "admins"
+  user_pool_id = aws_cognito_user_pool.pool.id
+  description  = "Group with permissions to create and edit posts"
+  precedence   = 1
+}
+
+
+resource "aws_cognito_user_group" "subscribers" {
+  name         = "subscribers"
+  user_pool_id = aws_cognito_user_pool.pool.id
+  description  = "Users who can read and comment posts"
+  precedence   = 1
+}
+
+
+resource "aws_cognito_user_in_group" "admin_association" {
+  user_pool_id = aws_cognito_user_pool.pool.id
+  group_name   = aws_cognito_user_group.admins.name
+  username     = aws_cognito_user.admin_user.username
 
 }
