@@ -28,6 +28,14 @@ jobs:
       TF_VAR_better_auth_secret: ${{secrets.BETTER_AUTH_SECRET}}
 
     steps:
+      - name: Prepare Lambda Layer
+        run: |
+          mkdir -p python/lib/python3.12/site-packages
+          pip3 install ulid-py -t python/lib/python3.12/site-packages/
+          zip -r ulid_layer.zip python
+          # Verificamos que el archivo existe para que el plan no falle
+          ls -lh ulid_layer.zip
+          
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node from NVM
