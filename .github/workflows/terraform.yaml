@@ -33,11 +33,12 @@ jobs:
         uses: actions/checkout@v4
       - name: Prepare Lambda Layer
         run: |
-          mkdir -p python/lib/python3.12/site-packages
-          pip3 install ulid-py -t python/lib/python3.12/site-packages/
-          zip -r ulid_layer.zip python
-          # Verificamos que el archivo existe para que el plan no falle
-          ls -lh ulid_layer.zip
+          mkdir -p layer_temp/python
+          # Forzamos la reinstalación limpia de la última versión
+          pip3 install --upgrade ulid-py -t layer_temp/python/
+          cd layer_temp
+          zip -r ../ulid_layer.zip .
+          cd ..
       - name: Setup Node from NVM
         # Cargamos NVM y lo añadimos al PATH oficial de GitHub Actions
         run: |
