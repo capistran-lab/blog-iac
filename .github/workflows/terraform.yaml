@@ -27,7 +27,10 @@ jobs:
       TF_VAR_database_url: ${{secrets.DATABASE_URL}}
       TF_VAR_better_auth_secret: ${{secrets.BETTER_AUTH_SECRET}}
 
-    steps:
+    steps:      
+          
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Prepare Lambda Layer
         run: |
           mkdir -p python/lib/python3.12/site-packages
@@ -35,9 +38,6 @@ jobs:
           zip -r ulid_layer.zip python
           # Verificamos que el archivo existe para que el plan no falle
           ls -lh ulid_layer.zip
-          
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Setup Node from NVM
         # Cargamos NVM y lo añadimos al PATH oficial de GitHub Actions
         run: |
