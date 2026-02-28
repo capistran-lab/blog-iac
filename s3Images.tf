@@ -50,3 +50,26 @@ resource "aws_s3_bucket_public_access_block" "media_access" {
   
   depends_on = [aws_s3_bucket_public_access_block.media_access]
 }
+
+resource "aws_s3_bucket_policy" "allow_cloudfront_read" {
+  bucket = aws_s3_bucket.blog_media.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AllowCloudFrontServicePrincipalReadOnly"
+        Effect    = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.blog_media.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.media_distribution.arn
+          }
+        }
+      }
+    ]
+  })
+}
