@@ -19,7 +19,6 @@ resource "aws_s3_bucket_cors_configuration" "media_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["PUT", "POST", "GET"]
-    # For production, replace "*" with your CloudFront domain
     allowed_origins = ["*"] 
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
@@ -39,6 +38,13 @@ resource "aws_s3_bucket_public_access_block" "media_access" {
 # --- Unified Bucket Policy (CloudFront OAC only) ---
 resource "aws_s3_bucket_policy" "media_bucket_policy" {
   bucket = aws_s3_bucket.blog_media.id
+
+  # This 'depends_on' ensures the bucket and access block exist 
+  # before Terraform tries to attach the policy
+  depends_on = [
+    aws_s3_bucket.blog_media,
+    aws_s3_bucket_public_access_block.media_access
+  ]
 
   policy = jsonencode({
     Version = "2012-10-17"
