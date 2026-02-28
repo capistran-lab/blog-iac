@@ -1,4 +1,4 @@
- # --- Origin Access Control for the Frontend Website ---
+# --- Origin Access Control for the Frontend Website ---
 resource "aws_cloudfront_origin_access_control" "website_oac" {
   name                              = "${var.project_name}-website-oac"
   origin_access_control_origin_type = "s3"
@@ -20,9 +20,9 @@ resource "aws_cloudfront_distribution" "website_distribution" {
 
   # Support for Next.js client-side routing
   custom_error_response {
-    error_code            = 403
-    response_code         = 200
-    response_page_path    = "/index.html"
+    error_code         = 403
+    response_code      = 200
+    response_page_path = "/index.html"
   }
 
   default_cache_behavior {
@@ -32,12 +32,12 @@ resource "aws_cloudfront_distribution" "website_distribution" {
 
     forwarded_values {
       query_string = false
-      cookies      { forward = "none" }
+      cookies { forward = "none" }
     }
 
     viewer_protocol_policy = "redirect-to-https"
     compress               = true # Enables Gzip/Brotli compression
-    
+
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers.id
   }
 

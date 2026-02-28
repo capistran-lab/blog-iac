@@ -3,7 +3,7 @@ resource "aws_s3_bucket" "blog_media" {
   bucket = "${var.project_name}-media-storage"
 
   lifecycle {
-    prevent_destroy = false 
+    prevent_destroy = false
   }
 
   tags = {
@@ -19,7 +19,7 @@ resource "aws_s3_bucket_cors_configuration" "media_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["PUT", "POST", "GET"]
-    allowed_origins = ["*"] 
+    allowed_origins = ["*"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }
@@ -50,8 +50,8 @@ resource "aws_s3_bucket_policy" "media_bucket_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowCloudFrontServicePrincipalReadOnly"
-        Effect    = "Allow"
+        Sid    = "AllowCloudFrontServicePrincipalReadOnly"
+        Effect = "Allow"
         Principal = {
           Service = "cloudfront.amazonaws.com"
         }

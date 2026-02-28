@@ -126,7 +126,7 @@ resource "aws_apigatewayv2_integration" "image_integration" {
 
 #-- public Route --#
 
-resource "aws_apigatewayv2_route" "image_presigned" {  
+resource "aws_apigatewayv2_route" "image_presigned" {
   api_id             = aws_apigatewayv2_api.blog_api.id
   route_key          = "POST /files/presigned"
   target             = "integrations/${aws_apigatewayv2_integration.image_integration.id}"
@@ -148,7 +148,7 @@ resource "aws_lambda_alias" "image_handler_live" {
   description      = "Alias para el despliegue desde GitHub Actions"
   function_name    = aws_lambda_function.image_handler.function_name
   function_version = aws_lambda_function.image_handler.version
-  
+
   lifecycle {
     ignore_changes = [function_version] # Para que GH Actions lo maneje
   }

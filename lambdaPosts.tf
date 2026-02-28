@@ -53,7 +53,7 @@ resource "aws_lambda_function" "posts_handler" {
 # Solo crea la Layer, no la asignes a la Lambda aquí
 resource "aws_lambda_layer_version" "ulid_layer" {
   layer_name          = "ulid-layer"
-  filename            = "ulid_layer.zip" 
+  filename            = "ulid_layer.zip"
   compatible_runtimes = ["python3.12"]
 }
 
