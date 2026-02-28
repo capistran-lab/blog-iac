@@ -49,3 +49,8 @@ resource "aws_cloudfront_distribution" "website_distribution" {
     cloudfront_default_certificate = true
   }
 }
+
+output "cloudfront_distribution_id" {
+  description = "The ID of the CloudFront distribution for the website"
+  value       = aws_cloudfront_distribution.website_distribution.id
+}
