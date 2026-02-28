@@ -71,7 +71,7 @@ resource "aws_iam_role_policy_attachment" "attach_auth_policy" {
   policy_arn = aws_iam_policy.auth_app_access.arn
 }
 
- resource "aws_iam_role_policy" "image_s3_policy" {
+resource "aws_iam_role_policy" "image_s3_policy" {
   name = "image-upload-policy"
   role = aws_iam_role.auth_lambda_role.id
 
@@ -81,7 +81,7 @@ resource "aws_iam_role_policy_attachment" "attach_auth_policy" {
       {
         Action   = ["s3:PutObject"]
         Effect   = "Allow"
-         Resource = "${aws_s3_bucket.blog_media.arn}/blog/images/*"
+        Resource = "${aws_s3_bucket.blog_media.arn}/blog/images/*"
       }
     ]
   })

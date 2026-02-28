@@ -62,13 +62,13 @@ resource "aws_cloudfront_distribution" "media_distribution" {
     }
 
     viewer_protocol_policy = "redirect-to-https"
-    
+
     # Arregla el reporte de Lighthouse: Cache de 1 año para imágenes
-    min_ttl                = 0
-    default_ttl            = 31536000
-    max_ttl                = 31536000
-    compress               = true
-    
+    min_ttl     = 0
+    default_ttl = 31536000
+    max_ttl     = 31536000
+    compress    = true
+
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers.id
   }
 
