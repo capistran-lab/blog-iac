@@ -23,23 +23,22 @@ resource "aws_dynamodb_table" "blog_table" {
     type = "S" # String
   }
 
+
+  # slug attribute 
+  attribute {
+    name = "slug"
+    type = "S" # String
+  }
+
   attribute {
     name = "GSI1PK"
     type = "S"
   }
-
   attribute {
     name = "GSI1SK"
     type = "S"
   }
 
-  # 2. Agrega el Global Secondary Index que pide tu Lambda
-  global_secondary_index {
-    name            = "TypeIndex"
-    hash_key        = "GSI1PK"
-    range_key       = "GSI1SK"
-    projection_type = "ALL"
-  }
   global_secondary_index {
     name     = "SlugIndex"
     hash_key = "slug" # In AWS Provider 6.x, this is still hash_key, 
@@ -48,10 +47,12 @@ resource "aws_dynamodb_table" "blog_table" {
     projection_type = "ALL"
   }
 
-  # slug attribute 
-  attribute {
-    name = "slug"
-    type = "S" # String
+  global_secondary_index {
+    name = "TypeIndex"
+
+    hash_key        = "GSI1PK" # Valor: "POSTS"
+    range_key       = "GSI1SK" # Valor: "2026-02-23T..." (Fecha para ordenar)
+    projection_type = "ALL"
   }
 
   tags = {
