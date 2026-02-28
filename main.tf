@@ -51,26 +51,33 @@ resource "aws_s3_bucket_website_configuration" "blog_config" {
 resource "aws_s3_bucket_public_access_block" "blog_public_access" {
   bucket = aws_s3_bucket.tf-blog-website-bucket.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 # Policy to allow public read access to all objects in the hosting bucket
+# --- CloudFront Access Policy ---
 resource "aws_s3_bucket_policy" "public_read_policy" {
-  depends_on = [aws_s3_bucket_public_access_block.blog_public_access]
-  bucket     = aws_s3_bucket.tf-blog-website-bucket.id
+  bucket = aws_s3_bucket.tf-blog-website-bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadGetObject"
+        Sid       = "AllowCloudFrontServicePrincipalReadOnly"
         Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.tf-blog-website-bucket.arn}/*"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.tf-blog-website-bucket.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.website_distribution.arn
+          }
+        }
       }
     ]
   })
