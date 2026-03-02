@@ -21,12 +21,13 @@ resource "aws_s3_object" "image_optimizer_place_holder_upload" {
 resource "aws_lambda_function" "image_optimizer" {
   function_name = "${var.project_name}-image-optimizer"
   role          = aws_iam_role.optimizer_role.arn
-  handler       = "index.handler" # Asegúrate de que tu build de GitHub Actions genere un index.js
+  handler       = "index.handler"
   runtime       = "nodejs22.x"
-  timeout       = 60   # Le subí un poco por si Sharp procesa imágenes pesadas
-  memory_size   = 1024 # Sharp agradece mucho tener 1GB para ir rápido
+  timeout       = 60
+  memory_size   = 1024
+  architectures = ["arm64"]
 
-  # IMPORTANTE: Aquí le decimos que busque en el bucket de Artifacts
+
   s3_bucket = aws_s3_bucket.artifacts_storage.id
   s3_key    = "image-optimizer-handler.zip"
 
