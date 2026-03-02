@@ -32,6 +32,7 @@ resource "aws_lambda_function" "auth_handler" {
   handler       = "index.handler"
   runtime       = "nodejs22.x" # Using latest Node.js 22
   memory_size   = 256
+  architectures = ["arm64"]
 
   # Location of the code in S3
   s3_bucket = aws_s3_bucket.artifacts_storage.id
