@@ -25,6 +25,7 @@ resource "aws_lambda_function" "image_handler" {
   handler       = "index.handler"
   runtime       = "nodejs22.x"
   memory_size   = 128
+  architectures = ["arm64"]
 
   publish   = true
   s3_bucket = aws_s3_bucket.artifacts_storage.id
