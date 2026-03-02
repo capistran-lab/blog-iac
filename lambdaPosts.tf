@@ -24,6 +24,7 @@ resource "aws_lambda_function" "posts_handler" {
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.12"
   memory_size   = 128
+  architectures = ["arm64"]
 
   # Enable versioning so aliases like 'live' can point to specific versions
   publish = true
